@@ -1,0 +1,35 @@
+<h1>Agular services</h1>
+
+<h1>{{todayDate}}</h1>
+<!-- <ul >
+  <li *ngFor="let employee of employeeData">{{employee.name}}</li>
+</ul> -->
+
+
+<table> 
+  <tr>
+    <th>
+      Employee Name
+    </th>
+    <th>
+      Employee Id
+    </th>
+    <th>
+      Employee Age
+    </th>
+    <th>Action</th>
+  </tr>
+
+
+  <tr *ngFor="let employee of employeeData">
+    <td>{{employee.name}}</td>
+    <td>{{employee.id}}</td>
+    <td>{{employee.age}}</td>
+    <td><button (click)="editEmployee(employee)">EDIT</button></td>
+
+  </tr>
+</table>
+
+<hr>
+
+<app-employee></app-employee>
