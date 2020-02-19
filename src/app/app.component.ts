@@ -1,76 +1,65 @@
-import { Component, OnInit } from '@angular/core';
-import {EmployeeService} from './employee.service'
-import {UserService} from './user.service'
+import { Injectable } from '@angular/core';
+import {HttpClient} from '@angular/common/http'
 
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+@Injectable({
+  providedIn: 'root'
 })
-export class AppComponent implements OnInit {
-  title = 'angularServices';
-  constructor(private empService:EmployeeService,private userSer:UserService){
-    
-  }
-  employeeData=[];
-  todayDate:Date
-  greet:string;
-  allPosts:any;
-  newPost:string;
-  errMsg:string
 
-  ngOnInit(){
-    this.employeeData=this.empService.getEmpData();
-    this.todayDate=this.empService.getTodaydate();
-    this.greet=this.empService.greetMessage;
-    console.log(this.greet)
+// @Injectable()
 
-    console.log("emp data :" +JSON.stringify(this.employeeData));
+export class EmployeeService {
 
-    console.log(this.userSer.msg)
-    this.empService.getAllPosts().subscribe(postsData=>{
-      this.allPosts=postsData;
-      console.log(this.allPosts);
-    },error=>{
-      // alert("Unexpected error occured");
-      this.errMsg="Unexpected Error"
-    })
-  
-  }
+  constructor(private http:HttpClient) { }
 
-  editEmployee(data){
-    console.log(data);
-    this.empService.editEmployeeData(data);
+  greetMessage="HELLO";
 
-
+  getEmpData(){
+    return [
+      {name:"Ravi",id:12,age:25},
+      {name:"Venkat",id:13,age:23},
+      {name:"Swapna",id:14,age:27},
+      {name:"Udhay",id:15,age:29}
+    ]
   }
 
 
-  savePost(){
-// console.log(this.newPost);
-this.empService.savePost(this.newPost).subscribe(res=>{
-  this.allPosts.push(res);
-  // console.log(res);
-})
+  getAllPosts(){
+    return this.http.get('https://jsonplaceholder.typicode.com/posts');
   }
 
-  updatePost(post){
-    console.log(post);
-    this.empService.updatePost(post).subscribe(res=>{
-      console.log(res);
-    })
+  savePost(post){
+
+console.log("service :"+post);
+let data={title:post};
+return this.http.post('https://jsonplaceholder.typicode.com/posts',data);
   }
 
-  deletePost(post){
-    this.empService.deletePost(post).subscribe(res=>{
-      let index=this.allPosts.indexOf(post)
-       this.allPosts.splice(index,1)
-      console.log(res);
-    },(error:Response)=>{
-      if(error.status==404){
-        this.errMsg="Post has been deleted "
-      };
-    })
+  updatePost(data){
+    console.log(data.id);
+    return this.http.put('https://jsonplaceholder.typicode.com/posts/'+data.id,data);
+
   }
+
+  deletePost(data){
+    console.log(data.id);
+    return this.http.delete('https://jsonplaceholder.typicode.com/posts/356');
+  }
+
+  getTodaydate(){
+    let todayDate= new Date();
+    console.log(todayDate);
+    return todayDate;
+  }
+
+  editEmployeeData(greet){
+console.log(greet)
+
+  }
+
+  // greet(){
+  //   return "HEY HOW R U ?"
+  // }
+
+
 }
